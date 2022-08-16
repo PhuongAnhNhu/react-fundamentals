@@ -1,9 +1,10 @@
 // Basic Forms
 // http://localhost:3000/isolated/exercise/06.js
 
-import React, {useRef} from 'react'
+import React, {useRef, useState} from 'react'
 
 function UsernameForm({onSubmitUsername}) {
+  const [error, setError] = useState(null)
   const refUserName = useRef('')
   const refPassword = useRef('')
   function handlerSubmit(event) {
@@ -11,6 +12,11 @@ function UsernameForm({onSubmitUsername}) {
     const username = refUserName.current.value
     const password = refPassword.current.value
     onSubmitUsername(username, password)
+  }
+  const handleChange = event => {
+    const {value} = event.target
+    const isValid = value === value.toLowerCase()
+    setError(isValid ? null : 'Username must be lower case')
   }
 
   // `event.preventDefault()` to prevent the default behavior of form submit
@@ -23,13 +29,23 @@ function UsernameForm({onSubmitUsername}) {
     <form onSubmit={handlerSubmit}>
       <div>
         <label htmlFor="username">Username:</label>
-        <input id="username" type="text" ref={refUserName} />
+        <input
+          id="username"
+          type="text"
+          ref={refUserName}
+          onChange={handleChange}
+        />
       </div>
       <div>
         <label htmlFor="password">Password:</label>
         <input id="password" type="text" ref={refPassword} />
+        <div role="alert" style={{color: 'red'}}>
+          {error}
+        </div>
       </div>
-      <button type="submit">Submit</button>
+      <button disabled={Boolean(error)} type="submit">
+        Submit
+      </button>
     </form>
   )
 }
