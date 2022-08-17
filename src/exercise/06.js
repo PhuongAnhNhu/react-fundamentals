@@ -4,19 +4,21 @@
 import React, {useRef, useState} from 'react'
 
 function UsernameForm({onSubmitUsername}) {
-  const [error, setError] = useState(null)
-  const refUserName = useRef('')
-  const refPassword = useRef('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
   function handlerSubmit(event) {
     event.preventDefault()
-    const username = refUserName.current.value
-    const password = refPassword.current.value
     onSubmitUsername(username, password)
   }
-  const handleChange = event => {
+  const handleChangeUsername = event => {
     const {value} = event.target
-    const isValid = value === value.toLowerCase()
-    setError(isValid ? null : 'Username must be lower case')
+    setUsername(value.toLowerCase())
+  }
+
+  const handleChangePassword = event => {
+    const {value} = event.target
+    setPassword(value)
   }
 
   // `event.preventDefault()` to prevent the default behavior of form submit
@@ -32,20 +34,20 @@ function UsernameForm({onSubmitUsername}) {
         <input
           id="username"
           type="text"
-          ref={refUserName}
-          onChange={handleChange}
+          value={username}
+          onChange={handleChangeUsername}
         />
       </div>
       <div>
         <label htmlFor="password">Password:</label>
-        <input id="password" type="text" ref={refPassword} />
-        <div role="alert" style={{color: 'red'}}>
-          {error}
-        </div>
+        <input
+          id="password"
+          type="text"
+          value={password}
+          onChange={handleChangePassword}
+        />
       </div>
-      <button disabled={Boolean(error)} type="submit">
-        Submit
-      </button>
+      <button type="submit">Submit</button>
     </form>
   )
 }
